@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: golang, tags: ["{{node_exporter_bin_name}}"] }
+  - { role: prometheus-node-exporter, tags: ["{{node_exporter_bin_name}}"] }

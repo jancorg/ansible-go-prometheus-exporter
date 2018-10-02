@@ -1,0 +1,15 @@
+[Unit]
+Description={{ node_exporter_description }}
+Documentation=https://{{ node_exporter_repo }}
+
+[Service]
+Restart={{ node_exporter_restart }}
+User={{ node_exporter_user }}
+EnvironmentFile={{ node_exporter_env_file }}
+ExecStart={{ node_exporter_install_folder }}/{{node_exporter_bin_name}} $ARGS
+ExecReload=/bin/kill -HUP $MAINPID
+TimeoutStopSec={{ node_exporter_stop_timeout }}
+SendSIGKILL={{node_exporter_send_sigkill}}
+
+[Install]
+WantedBy=multi-user.target

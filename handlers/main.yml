@@ -1,0 +1,4 @@
+---
+
+- name: "restart {{node_exporter_bin_name}}"
+  service: name="{{node_exporter_bin_name}}" state=restarted

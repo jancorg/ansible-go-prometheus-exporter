@@ -1,0 +1,49 @@
+---
+
+- name: "create {{node_exporter_bin_name}} folder"
+  file:
+    path: "{{ node_exporter_build_folder }}"
+    state: directory
+
+# Using exporter recommended in https://prometheus.io/docs/instrumenting/exporters/
+# Custom install avoids broken dists. Go does not allow to fix version for now.
+- name: get exporter
+  command: "{{ item }}"
+  args:
+    chdir: "{{node_exporter_build_folder}}"
+  with_items:
+    - "go get {{node_exporter_repo}}"
+  environment:
+    GOPATH:  "{{ node_exporter_build_folder }}"
+
+- name: fix exporter version
+  command: "{{ item }}"
+  args:
+    chdir: "{{node_exporter_build_folder}}/src/{{node_exporter_repo}}"
+  with_items:
+    - "git checkout {{node_exporter_repo_version}}"
+    - "go build ."
+    - "cp -f {{node_exporter_build_bin}} {{ node_exporter_install_folder }}/{{ node_exporter_bin_name }}"
+  environment:
+    GOPATH:  "{{ node_exporter_build_folder }}"
+
+- name: service script and default config
+  template:
+    dest: "{{ item.file }}"
+    src: "{{ item.template }}"
+    mode: 0744
+  with_items:
+    - { file: "{{ node_exporter_env_file }}", template: exporter.env.j2 }
+    - { file: "/etc/systemd/system/{{ node_exporter_bin_name }}.service", template: exporter.service.j2 }
+  notify:
+      - "restart {{node_exporter_bin_name}}"
+
+- name: delete couchdb-node-exporter folder
+  file:
+    path: "{{ node_exporter_build_folder }}"
+    state: absent
+
+- name: always restart exporter
+  service:
+    name: "{{node_exporter_bin_name}}"
+    state: restarted

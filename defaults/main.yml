@@ -1,0 +1,16 @@
+---
+
+  node_exporter_description: go exporter for prometheus
+  node_exporter_repo: github.com/foo/bar
+  node_exporter_repo_version: b978dc1e1c63bc1df12e613731ed724af7e54f87
+  node_exporter_build_folder: /tmp/prometheus-foobar-exporter
+  node_exporter_install_folder: /usr/local/bin
+  node_exporter_build_bin: foobar-prometheus-exporter
+  node_exporter_bin_name: prometheus-foobar-exporter
+  node_exporter_listen_port: 9984
+  node_exporter_user: prometheus
+  node_exporter_env_file: /etc/default/prometheus-foobar-exporter
+  node_exporter_restart: always
+  node_exporter_stop_timeout: 20s
+  node_exporter_send_sigkill: no
+  node_exporter_env_vars: ''
